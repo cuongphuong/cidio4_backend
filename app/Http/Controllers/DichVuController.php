@@ -36,7 +36,7 @@ class DichVuController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'data' => $validator->errors()]);
+            return response()->json(['status' => false, 'data' => $validator->errors(), 'giatien' => $request->get('giatien')]);
         }
 
         $path = null;
@@ -44,6 +44,8 @@ class DichVuController extends Controller
         if ($request->hasFile('demo')) {
             $file = $request->demo;
             $path = $file->move('upload', $file->getClientOriginalName());
+            $path = str_replace('\\', '/', $path);
+            
         }
 
         try {
