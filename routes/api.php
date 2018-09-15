@@ -56,3 +56,5 @@ Route::resource('service', 'DichVuController');
 Route::get('/service/getsercate/{idLoaiDV}', 'DichVuController@getDichVuByPhanLoai');
 Route::get('/service/search/{key}', 'DichVuController@searchByTenDichVu');
 
+// PackageController
+Route::resource('package', 'PackageController');

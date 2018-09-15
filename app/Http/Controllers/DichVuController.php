@@ -67,7 +67,7 @@ class DichVuController extends Controller
         if ($res) {
             return response()->json(['status' => true, 'data' => $res]);
         } else {
-            return response()->json(['status' => false, 'data' => 'Can not find '. $id]);
+            return response()->json(['status' => false, 'data' => 'Can not find ' . $id]);
         }
     }
 
@@ -143,9 +143,12 @@ class DichVuController extends Controller
             }
             // ... more clauses from the querystring
             $services = $builder->orderBy('tendichvu')->paginate(5);
-            return response()->json(['status' => true, 'data' => $services]);
-        } else
-            return response()->json(['status' => false, 'data' => 'Can not find '. $key]);
+            if (count($services) > 0) {
+                return response()->json(['status' => true, 'data' => $services]);
+            } else {
+                return response()->json(['status' => false, 'data' => 'Can not find ' . $key]);
+            }
+        }
     }
 
 }
