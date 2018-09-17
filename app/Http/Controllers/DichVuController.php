@@ -97,6 +97,7 @@ class DichVuController extends Controller
         if ($request->hasFile('demo')) {
             $file = $request->demo;
             $path = $file->move('upload', $file->getClientOriginalName());
+            $path = str_replace('\\', '/', $path);
         }
 
         try {
