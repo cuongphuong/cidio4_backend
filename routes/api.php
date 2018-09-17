@@ -56,5 +56,11 @@ Route::resource('service', 'DichVuController');
 Route::get('/service/getsercate/{idLoaiDV}', 'DichVuController@getDichVuByPhanLoai');
 Route::get('/service/search/{key}', 'DichVuController@searchByTenDichVu');
 
-// PackageController
 Route::resource('package', 'PackageController');
+Route::get('/get/package/{page}/{limit}', 'PackageController@getPackage');
+Route::get('/get-detail/package/{id}', 'PackageController@searchByTenDichVu');
+
+//
+Route::resource('infosystem', 'InfosystemController');
+
+Route::resource('chitietHoaDon', 'CTHoaDonController');
