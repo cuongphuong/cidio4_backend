@@ -7,6 +7,7 @@ use App\Post;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use App\User;
+use DB;
 
 class PostController extends Controller
 {
@@ -118,7 +119,8 @@ class PostController extends Controller
         if ($page > 0 && $limit > 1) {
             $fist = $page * $limit - $limit;
             $last = $page * $limit;
-            $posts = Post::skip($fist)->take($last)->get();
+            $sql = "SELECT tb_baiviet.*, (SELECT users.hoten FROM users WHERE users.id = tb_baiviet.id_user) as tenthanhvien, (SELECT tb_theloai.tentheloai FROM tb_theloai WHERE tb_theloai.id_theloai = tb_baiviet.id_theloai) as tentheloai FROM tb_baiviet LIMIT " . $fist . ", " . $last . "";
+            $posts = DB::select($sql);
             if ($posts) {
                 return response()->json(['status' => true, 'data' => $posts], 201);
             } else {

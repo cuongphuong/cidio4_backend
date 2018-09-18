@@ -58,7 +58,7 @@ Route::get('/service/search/{key}', 'DichVuController@searchByTenDichVu');
 
 Route::resource('package', 'PackageController');
 Route::get('/get/package/{page}/{limit}', 'PackageController@getPackage');
-Route::get('/get-detail/package/{id}', 'PackageController@searchByTenDichVu');
+Route::get('/get-detail/package/{id}', 'PackageController@getDetailPackage');
 
 //
 Route::resource('infosystem', 'InfosystemController');
