@@ -101,10 +101,9 @@ class PhanLoaiDichVuController extends Controller
 
     public function getAll()
     {
-        $lst = DB::select(DB::raw('SELECT tb_phanloai_dichvu.*, COUNT(tb_phanloai_dichvu.id_loaidv) as sodv FROM tb_phanloai_dichvu INNER JOIN tb_dichvu ON(tb_phanloai_dichvu.id_loaidv = tb_dichvu.id_loaidv) GROUP BY tb_phanloai_dichvu.id_loaidv, tenloaidv, mota,created_at, updated_at'));
-
-        // $lst = PhanLoaiDichVu::select('tb_phanloai_dichvu.*')->join('tb_dichvu', 'tb_phanloai_dichvu.id_loaidv', '=', 'tb_dichvu.id_loaidv')
-        //     ->groupBy('tb_phanloai_dichvu.id_loaidv');
+        // SELECT tb_phanloai_dichvu.*, (SELECT COUNT(*) FROM tb_dichvu WHERE tb_dichvu.id_loaidv = tb_phanloai_dichvu.id_loaidv) as sodv, (SELECT COUNT(*) FROM tb_goi_dichvu WHERE id_loaidv = tb_phanloai_dichvu.id_loaidv) as dichvusd, ((SELECT COUNT(*) FROM tb_goi_dichvu WHERE id_loaidv = tb_phanloai_dichvu.id_loaidv) / (SELECT COUNT(*) FROM tb_dichvu WHERE tb_dichvu.id_loaidv = tb_phanloai_dichvu.id_loaidv))*100 as phantram FROM tb_phanloai_dichvu
+        $sql = "SELECT tb_phanloai_dichvu.*, (SELECT COUNT(*) FROM tb_dichvu WHERE tb_dichvu.id_loaidv = tb_phanloai_dichvu.id_loaidv) as sodv, (SELECT COUNT(*) FROM tb_goi_dichvu WHERE id_loaidv = tb_phanloai_dichvu.id_loaidv) as dichvusd, ((SELECT COUNT(*) FROM tb_goi_dichvu WHERE id_loaidv = tb_phanloai_dichvu.id_loaidv) / (SELECT COUNT(*) FROM tb_dichvu WHERE tb_dichvu.id_loaidv = tb_phanloai_dichvu.id_loaidv))*100 as phantram FROM tb_phanloai_dichvu";
+        $lst = DB::select($sql);
         if ($lst != null) {
             return response()->json(['status' => true, 'data' => $lst]);
         } else {
