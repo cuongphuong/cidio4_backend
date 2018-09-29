@@ -78,15 +78,10 @@ class PackageController extends Controller
             $fist = $page * $limit - $limit;
             $last = $page * $limit;
             $sql = "SELECT tb_goi.*, (SELECT SUM(soluong) FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = tb_goi.id_goi) AS soluongdv, (SELECT SUM(tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu)) as tongtien FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = tb_goi.id_goi) as tongtien, \n"
-
                 . "\n"
-
                 . "IF((SELECT users.id_chucvu FROM users WHERE users.id = tb_goi.id_user) < 2, CONCAT(\"Gói dịch vụ build bởi \", (SELECT users.hoten FROM users WHERE users.id = tb_goi.id_user)) , CONCAT(\"Gói dịch vụ của \", (SELECT users.hoten FROM users WHERE users.id = tb_goi.id_user))) as tengoi\n"
-
                 . "\n"
-
                 . "\n"
-
                 . "from tb_goi INNER JOIN tb_goi_dichvu on (tb_goi.id_goi = tb_goi_dichvu.id_goi) GROUP BY tb_goi.id_goi, tb_goi.id_user, tb_goi.created_at, tb_goi.updated_at, soluongdv, tongtien, tengoi ORDER BY tb_goi.id_goi DESC LIMIT " . $fist . ", " . $last . "";
             $lst = DB::select($sql);
             if ($lst) {
