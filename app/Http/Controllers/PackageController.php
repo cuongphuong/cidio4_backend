@@ -12,8 +12,8 @@ class PackageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['only' => ['getPackage', 'update', 'destroy', 'store']]);
-        $this->middleware('pg.mod', ['only' => ['getPackage']]);
+        $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store']]);
+        // $this->middleware('pg.mod', ['only' => ['getPackage']]);
     }
 
     public function index()
@@ -64,7 +64,7 @@ class PackageController extends Controller
             ]);
         }
 
-        return response()->json(['status' => true]);
+        return response()->json(['status' => true, 'data' => $newPackage]);
     }
 
     public function show($id)
@@ -96,7 +96,7 @@ class PackageController extends Controller
     public function getDetailPackage($idgoi)
     {
         // SELECT tb_goi_dichvu.id_dichvu, (SELECT tb_dichvu.tendichvu FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as tendichvu, (SELECT tb_dichvu.demo FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as demo, (SELECT tb_phanloai_dichvu.id_loaidv FROM tb_phanloai_dichvu INNER JOIN tb_dichvu on(tb_phanloai_dichvu.id_loaidv = tb_dichvu.id_loaidv) WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as loaidv, tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as giacot, soluong FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = 29
-        $sql = "SELECT tb_goi_dichvu.id_dichvu, (SELECT tb_dichvu.tendichvu FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as tendichvu, (SELECT tb_dichvu.demo FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as demo, (SELECT tb_phanloai_dichvu.id_loaidv FROM tb_phanloai_dichvu INNER JOIN tb_dichvu on(tb_phanloai_dichvu.id_loaidv = tb_dichvu.id_loaidv) WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as loaidv, tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as giacot, soluong FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = " . $idgoi;
+        $sql = "SELECT tb_goi_dichvu.id_dichvu, (SELECT tb_dichvu.tendichvu FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as tendichvu, (SELECT tb_dichvu.mota FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as mota, (SELECT tb_dichvu.demo FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as demo, (SELECT tb_phanloai_dichvu.id_loaidv FROM tb_phanloai_dichvu INNER JOIN tb_dichvu on(tb_phanloai_dichvu.id_loaidv = tb_dichvu.id_loaidv) WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as id_loaidv, tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as giatien, tb_goi_dichvu.soluong FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = " . $idgoi;
 
         $data = DB::select($sql);
         if ($data) {

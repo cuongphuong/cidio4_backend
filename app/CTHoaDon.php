@@ -11,9 +11,10 @@ class CTHoaDon extends Model
     public $timestamps = true;
     protected $primaryKey = 'id_cthd';
     protected $fillable = [
+        'sobantiet',
         'id_hoadon',
         'ngaytochuc',
         'diadiemtochuc',
-        'khonggianmau',
+        'mota'
     ];
 }

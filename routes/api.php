@@ -64,3 +64,14 @@ Route::get('/get-detail/package/{id}', 'PackageController@getDetailPackage');
 Route::resource('infosystem', 'InfosystemController');
 
 Route::resource('chitietHoaDon', 'CTHoaDonController');
+
+// HoaDonCOntroller
+Route::resource('hoadon', 'HoadonController');
+Route::post('hoadon/gethodon', 'HoadonController@tinhTienHoaGoi');
+
+//ThongKeController
+Route::get('/thongke/doanhthu/thang/{nam}', 'ThongKeController@thongKeDoanhThuTheoThang');
+Route::get('/thongke/doanhthu/nam/{nam}', 'ThongKeController@thongKeDoanhAllNam');
+
+Route::get('/thongke/donhang/thang/{nam}', 'ThongKeController@thongkeDonHangTheoThang');
+Route::get('/thongke/donhang/nam/{nam}', 'ThongKeController@thongKeDonHangTheoNam');

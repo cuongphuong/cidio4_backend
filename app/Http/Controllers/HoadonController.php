@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\HoaDon;
 use JWTAuth;
 use App\User;
-use App\Post;
+use App\DichVu;
 use Illuminate\Support\Facades\Validator;
+use App\CTHoaDon;
 
 class HoadonController extends Controller
 {
@@ -19,7 +20,7 @@ class HoadonController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store']]);
-        $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
+        // $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
     }
 
     public function index()
@@ -38,7 +39,7 @@ class HoadonController extends Controller
         //
     }
 
-    /**
+    /**+
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -49,10 +50,7 @@ class HoadonController extends Controller
         $user = JWTAuth::toUser($request->input('token'));
 
         $validator = Validator::make($request->all(), [
-            'ngaylaphoadon' => 'required|string|max:255',
-            'id_user'=> 'required',
-            'id_goi'=> 'required',
-            'tinhtrang'=> 'required|string|max:255',
+            'id_goi' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -60,14 +58,21 @@ class HoadonController extends Controller
         }
 
         try {
-            $newitem = Post::create([
-                'ngaylaphoadon' => $request->get('ngaylaphoadon'),
+            $newitem = HoaDon::create([
                 'id_user' => $user->id,
                 'id_goi' => $request->get('id_goi'),
-                'tinhtrang' => $request->get('tinhtrang'),
+                'tinhtrang' => 0,
             ]);
 
-            return response()->json(['status' => true, 'data' => compact('newitem')], 201);
+            $newCTHoaDon = CTHoaDon::create([
+                'sobantiet' => $request->get('sobantiet'),
+                'id_hoadon' => $newitem->id_hoadon,
+                'ngaytochuc' => date("Y-m-d H:i:s", strtotime($request->get('ngaytochuc'))),
+                'diadiemtochuc' => $request->get('diadiemtochuc'),
+                'mota' => $request->get('mota')
+            ]);
+            // return response()->json(['status' => true, 'data' => $newitem->id_hoadon]);
+            return response()->json(['status' => true, 'data' => $newitem, 'cthd' => $newCTHoaDon], 201);
         } catch (Exception $x) {
             return response()->json(['status' => false, 'message' => 'Can\'t create'], 400);
         }
@@ -82,7 +87,7 @@ class HoadonController extends Controller
     public function show($id)
     {
         $res = HoaDon::find($id);
-        if($res){
+        if ($res) {
             return response()->json(['status' => true, 'data' => $res], 201);
         } else {
             return response()->json(['status' => false, 'message' => 'Can not get.'], 201);
@@ -111,9 +116,9 @@ class HoadonController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'ngaylaphoadon' => 'required|string|max:255',
-            'id_user'=> 'string|max:255',
-            'id_goi'=> 'string|max:255',
-            'tinhtrang'=> 'required|string|max:255',
+            'id_user' => 'string|max:255',
+            'id_goi' => 'string|max:255',
+            'tinhtrang' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -150,6 +155,45 @@ class HoadonController extends Controller
         } catch (Exception $e) {
             return response()->json(['status' => false, 'message' => 'Xóa thất bại']);
         }
+    }
+
+    public function tinhTienHoaGoi(Request $request)
+    {
+        $strJson = $request->get('obj');
+        $obj = json_decode($strJson);
+        $arrThucDonCT = array();
+        $arrDoUongCT = array();
+        $arrKhacCT = array();
+
+
+        //duyết qua thực đơn
+        $tongTienThucDon = 0;
+        foreach ($obj->thucdon as $item) {
+            $onLyFood = DichVu::find($item);
+            array_push($arrThucDonCT, $onLyFood);
+        }
+
+        //duyat qua tât cả các đồ uống
+        foreach ($obj->douong as $item) {
+            $onLyDrink = DichVu::find($item->id);
+            $onLyDrink['soluong'] = $item->soluong;
+            $onLyDrink['thanhtien'] = $onLyDrink->giatien * $item->soluong;
+            array_push($arrDoUongCT, $onLyDrink);
+        }
+
+        //duyet qua dich vu bo xung
+        foreach ($obj->khac as $item) {
+            $onLyKhac = DichVu::find($item);
+            array_push($arrKhacCT, $onLyKhac);
+        }
+
+        $res = [
+            'thucdon' => $arrThucDonCT,
+            'douong' => $arrDoUongCT,
+            'khac' => $arrKhacCT
+        ];
+
+        return response()->json(['status' => true, 'data' => $res]);
     }
 
 }

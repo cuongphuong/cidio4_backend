@@ -14,7 +14,7 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store']]);
-        $this->middleware('pg.mod', ['only' => ['store', 'update', 'destroy', 'show']]);
+        $this->middleware('pg.mod', ['only' => ['store', 'update', 'destroy']]);
         $this->middleware('destroy.post', ['only' => ['update', 'destroy']]);
         //destroy.post
     }
@@ -61,12 +61,15 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $res = Post::find($id);
-            if ($res) {
-                return response()->json(['status' => true, 'data' => $res]);
-            } else {
-                return response()->json(['status' => false, 'data' => 'Can not find '. $id]);
-            }
+        $sql = "SELECT tb_baiviet.*, (SELECT users.hoten FROM users WHERE users.id = tb_baiviet.id_user) as tenthanhvien, (SELECT tb_theloai.tentheloai FROM tb_theloai WHERE tb_theloai.id_theloai = tb_baiviet.id_theloai) as tentheloai FROM tb_baiviet WHERE tb_baiviet.id_baiviet = " . $id;
+        $res = DB::select($sql);
+
+        // $res = Post::find($id);
+        if ($res) {
+            return response()->json(['status' => true, 'data' => $res[0]]);
+        } else {
+            return response()->json(['status' => false, 'data' => 'Can not find ' . $id]);
+        }
     }
 
 
@@ -177,6 +180,6 @@ class PostController extends Controller
             $lstPosts = $builder->orderBy('id_baiviet')->paginate(5);
             return response()->json(['status' => true, 'data' => $lstPosts]);
         } else
-            return response()->json(['status' => false, 'data' => 'Can not find '. $key]);
+            return response()->json(['status' => false, 'data' => 'Can not find ' . $key]);
     }
 }

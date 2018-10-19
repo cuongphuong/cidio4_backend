@@ -11,7 +11,6 @@ class HoaDon extends Model
     public $timestamps = true;
     protected $primaryKey = 'id_hoadon';
     protected $fillable = [
-        'ngaylaphoadon',
         'id_user',
         'id_goi',
         'tinhtrang',

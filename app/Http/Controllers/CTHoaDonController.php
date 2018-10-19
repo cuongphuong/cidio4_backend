@@ -15,7 +15,7 @@ class CTHoaDonController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store']]);
-        $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
+        // $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
     }
 
 
@@ -48,7 +48,6 @@ class CTHoaDonController extends Controller
             'id_hoadon' => 'required',
             'ngaytochuc'=> 'string|max:255',
             'diadiemtochuc'=> 'string|max:255',
-            'khonggianmau'=> 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -63,7 +62,7 @@ class CTHoaDonController extends Controller
                 'khonggianmau' => $request->get('khonggianmau'),
             ]);
 
-            return response()->json(['status' => true, 'data' => compact('newitem')], 201);
+            return response()->json(['status' => true, 'data' => $newitem], 201);
         } catch (Exception $x) {
             return response()->json(['status' => false, 'message' => 'Can\'t create'], 400);
         }
