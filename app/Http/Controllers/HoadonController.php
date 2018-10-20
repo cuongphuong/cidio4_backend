@@ -9,6 +9,8 @@ use App\User;
 use App\DichVu;
 use Illuminate\Support\Facades\Validator;
 use App\CTHoaDon;
+use DB;
+use Illuminate\Database\QueryException;
 
 class HoadonController extends Controller
 {
@@ -19,8 +21,8 @@ class HoadonController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store']]);
-        // $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware('jwt.auth', ['only' => ['update', 'destroy', 'store', 'getHoaDonChuaXacNhan', 'thayDoiTinhTrang']]);
+        $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy', 'getHoaDonChuaXacNhan', 'thayDoiTinhTrang']]);
     }
 
     public function index()
@@ -194,6 +196,40 @@ class HoadonController extends Controller
         ];
 
         return response()->json(['status' => true, 'data' => $res]);
+    }
+
+    public function getHoaDonChuaXacNhan()
+    {
+        $sql = 'SELECT tb_hoadon.id_hoadon, tb_hoadon.id_goi, tb_hoadon.id_user, (SELECT users.hoten FROM users WHERE users.id = tb_hoadon.id_user) as hoten, (SELECT users.sodienthoai FROM users WHERE users.id = tb_hoadon.id_user) as sodienthoai, tb_hoadon.tongtien, tb_hoadon.tinhtrang FROM tb_hoadon WHERE tb_hoadon.tinhtrang = 0';
+        $lst = DB::select($sql);
+        return response()->json(['status' => true, 'data' => $lst], 201);
+    }
+
+    public function getInfoHoaDon($idHoaDon)
+    {
+        $data = CTHoaDon::where('id_hoadon', '=', $idHoaDon)->first();
+        if ($data) {
+            return response()->json(['status' => true, 'data' => $data]);
+        } else {
+            return response()->json(['status' => false, 'mes' => 'can not find']);
+        }
+    }
+
+    public function thayDoiTinhTrang($idhd)
+    {
+        $hoadon = HoaDon::find($idhd);
+        try {
+            if ($hoadon->tinhtrang == 1) {
+                $hoadon->tinhtrang = 0;
+            } else {
+                $hoadon->tinhtrang = 1;
+            }
+            $hoadon->save();
+            return response()->json(['status' => true, 'data' => $hoadon]);
+        } catch (QueryException $e) {
+            return response()->json(['status' => false, 'mes' => 'can not set']);
+        }
+
     }
 
 }

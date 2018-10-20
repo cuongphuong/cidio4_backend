@@ -14,7 +14,8 @@ class ThongKeController extends Controller
         // $this->middleware('pg.admin', ['only' => ['store', 'update', 'destroy']]);
     }
 
-    public function ThongKeCoBan(){
+    public function ThongKeCoBan()
+    {
         $res = array();
         $tongDoanhThu = DB::table('tb_hoadon')->sum('tongtien');
         $doanhThuTrongThang = DB::table('tb_hoadon')->whereMonth('created_at', '=', date('m'))->whereYear('created_at', '=', date('Y'))->sum('tongtien');
@@ -114,8 +115,9 @@ class ThongKeController extends Controller
         return response()->json($res);
     }
 
-    public function getDonHangXapToi($nam){
-        $sql = "SELECT tb_hoadon.id_hoadon, tb_hoadon.id_goi, tb_hoadon.tongtien, (SELECT users.hoten FROM users WHERE users.id = tb_hoadon.id_user) as hoten, tb_cthoadon.sobantiet, tb_cthoadon.ngaytochuc, tb_cthoadon.mota FROM tb_hoadon INNER JOIN tb_cthoadon ON (tb_hoadon.id_hoadon = tb_cthoadon.id_hoadon) WHERE DATE(tb_cthoadon.ngaytochuc) = 12 AND m YEAR(tb_cthoadon.ngaytochuc) = 2018 AND tb_hoadon.tinhtrang = 1";
+    public function getDonHangTheoNgay($ngay, $thang, $nam)
+    {
+        $sql = "SELECT tb_hoadon.id_hoadon, tb_hoadon.id_goi, tb_hoadon.tongtien, (SELECT users.hoten FROM users WHERE users.id = tb_hoadon.id_user) as hoten, tb_cthoadon.sobantiet, tb_cthoadon.ngaytochuc, tb_cthoadon.mota FROM tb_hoadon INNER JOIN tb_cthoadon ON (tb_hoadon.id_hoadon = tb_cthoadon.id_hoadon) WHERE DAY(tb_cthoadon.ngaytochuc) = " . $ngay . " AND MONTH(tb_cthoadon.ngaytochuc) = " . $thang . " AND YEAR(tb_cthoadon.ngaytochuc) = " . $nam . " AND tb_hoadon.tinhtrang = 0";
         $lst = DB::select($sql);
         return response()->json($lst);
     }

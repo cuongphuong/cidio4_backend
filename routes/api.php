@@ -68,6 +68,9 @@ Route::resource('chitietHoaDon', 'CTHoaDonController');
 // HoaDonCOntroller
 Route::resource('hoadon', 'HoadonController');
 Route::post('hoadon/gethodon', 'HoadonController@tinhTienHoaGoi');
+Route::get('not-agree/hoadon', 'HoadonController@getHoaDonChuaXacNhan');
+Route::get('info/hoadon/{idhd}', 'HoadonController@getInfoHoaDon');
+Route::get('change-tinh-trang/hoadon/{idhd}', 'HoadonController@thayDoiTinhTrang');
 
 //ThongKeController
 Route::get('/thongke/coban', 'ThongKeController@ThongKeCoBan');
@@ -77,3 +80,4 @@ Route::get('/thongke/doanhthu/nam/{tunam}/{dennam}', 'ThongKeController@thongKeD
 
 Route::get('/thongke/donhang/thang/{nam}', 'ThongKeController@thongkeDonHangTheoThang');
 Route::get('/thongke/donhang/nam/{nam}', 'ThongKeController@thongKeDonHangTheoNam');
+Route::get('/thongke/donhangngay/{ngay}/{thang}/{nam}', 'ThongKeController@getDonHangTheoNgay');
