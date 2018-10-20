@@ -70,8 +70,10 @@ Route::resource('hoadon', 'HoadonController');
 Route::post('hoadon/gethodon', 'HoadonController@tinhTienHoaGoi');
 
 //ThongKeController
+Route::get('/thongke/coban', 'ThongKeController@ThongKeCoBan');
+
 Route::get('/thongke/doanhthu/thang/{nam}', 'ThongKeController@thongKeDoanhThuTheoThang');
-Route::get('/thongke/doanhthu/nam/{nam}', 'ThongKeController@thongKeDoanhAllNam');
+Route::get('/thongke/doanhthu/nam/{tunam}/{dennam}', 'ThongKeController@thongKeDoanhAllNam');
 
 Route::get('/thongke/donhang/thang/{nam}', 'ThongKeController@thongkeDonHangTheoThang');
 Route::get('/thongke/donhang/nam/{nam}', 'ThongKeController@thongKeDonHangTheoNam');
