@@ -29,8 +29,7 @@ class PostController extends Controller
         //
     }
 
-
-    public function store(Request $request)
+    public function store(Request $request) //them POST
     {
         $user = JWTAuth::toUser($request->input('token'));
 

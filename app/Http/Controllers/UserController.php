@@ -68,14 +68,15 @@ class UserController extends Controller
                 'hoten' => $request->get('hoten'),
                 'diachi' => null,
                 'gioitinh' => null,
-                'id_chucvu' => 2,
+                'avatar' => '/upload/avatar-df.png',
+                'id_chucvu' => 3,
                 'password' => bcrypt($request->get('password')),
             ]);
 
             $token = JWTAuth::fromUser($user);
             return response()->json(['status' => true, 'data' => compact('user', 'token')]);
         } catch (\Illuminate\Database\QueryException $x) {
-            return response()->json(['status' => false, 'message' => 'Query error']);
+            return response()->json(['status' => false, 'message' => $x]);
         } catch (Exception $e) {
             return response()->json(['status' => false, 'message' => 'Error']);
         }

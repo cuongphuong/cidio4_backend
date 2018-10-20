@@ -33,7 +33,6 @@ class ThongKeController extends Controller
         $res['users']['tong'] = $tongThanhVien;
         $res['users']['thang'] = $dkTrongThang;
 
-
         //goi
         $tongGoi = DB::table('tb_goi')->count('*');
         $res['goi']['tong'] = $tongGoi;
@@ -77,6 +76,9 @@ class ThongKeController extends Controller
 
 
 
+
+
+
     ///////////////////////////////////////////////////////////
     public function thongkeDonHangTheoThang($nam)
     {
@@ -110,5 +112,11 @@ class ThongKeController extends Controller
         }
 
         return response()->json($res);
+    }
+
+    public function getDonHangXapToi($nam){
+        $sql = "SELECT tb_hoadon.id_hoadon, tb_hoadon.id_goi, tb_hoadon.tongtien, (SELECT users.hoten FROM users WHERE users.id = tb_hoadon.id_user) as hoten, tb_cthoadon.sobantiet, tb_cthoadon.ngaytochuc, tb_cthoadon.mota FROM tb_hoadon INNER JOIN tb_cthoadon ON (tb_hoadon.id_hoadon = tb_cthoadon.id_hoadon) WHERE DATE(tb_cthoadon.ngaytochuc) = 12 AND m YEAR(tb_cthoadon.ngaytochuc) = 2018 AND tb_hoadon.tinhtrang = 1";
+        $lst = DB::select($sql);
+        return response()->json($lst);
     }
 }
