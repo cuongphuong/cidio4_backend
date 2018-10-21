@@ -93,6 +93,27 @@ class PackageController extends Controller
             return response()->json(['status' => false, 'message' => '$page > 0 and $limit > 1']);
     }
 
+    public function getPackageAdmin($page, $limit)
+    {
+        if ($page >= 1 && $limit >= 1) {
+            $fist = $page * $limit - $limit;
+            $last = $page * $limit;
+            $sql = "SELECT tb_goi.*, (SELECT SUM(soluong) FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = tb_goi.id_goi) AS soluongdv, (SELECT SUM(tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu)) as tongtien FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = tb_goi.id_goi) as tongtien, \n"
+                . "\n"
+                . "IF((SELECT users.id_chucvu FROM users WHERE users.id = tb_goi.id_user) < 2, CONCAT(\"Gói dịch vụ build bởi \", (SELECT users.hoten FROM users WHERE users.id = tb_goi.id_user)) , CONCAT(\"Gói dịch vụ của \", (SELECT users.hoten FROM users WHERE users.id = tb_goi.id_user))) as tengoi\n"
+                . "\n"
+                . "\n"
+                . "from tb_goi INNER JOIN tb_goi_dichvu on (tb_goi.id_goi = tb_goi_dichvu.id_goi) WHERE (SELECT users.id_chucvu FROM users WHERE users.id = tb_goi.id_user) < 3 GROUP BY tb_goi.id_goi, tb_goi.id_user, tb_goi.created_at, tb_goi.updated_at, soluongdv, tongtien, tengoi ORDER BY tb_goi.id_goi DESC LIMIT " . $fist . ", " . $last . "";
+            $lst = DB::select($sql);
+            if ($lst) {
+                return response()->json(['status' => true, 'data' => $lst], 201);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Don\'t get']);
+            }
+        } else
+            return response()->json(['status' => false, 'message' => '$page > 0 and $limit > 1']);
+    }
+
     public function getDetailPackage($idgoi)
     {
         // SELECT tb_goi_dichvu.id_dichvu, (SELECT tb_dichvu.tendichvu FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as tendichvu, (SELECT tb_dichvu.demo FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as demo, (SELECT tb_phanloai_dichvu.id_loaidv FROM tb_phanloai_dichvu INNER JOIN tb_dichvu on(tb_phanloai_dichvu.id_loaidv = tb_dichvu.id_loaidv) WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as loaidv, tb_goi_dichvu.soluong * (SELECT tb_dichvu.giatien FROM tb_dichvu WHERE tb_dichvu.id_dichvu = tb_goi_dichvu.id_dichvu) as giacot, soluong FROM tb_goi_dichvu WHERE tb_goi_dichvu.id_goi = 29
