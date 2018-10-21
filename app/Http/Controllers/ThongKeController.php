@@ -81,32 +81,33 @@ class ThongKeController extends Controller
 
 
     ///////////////////////////////////////////////////////////
-    public function thongkeDonHangTheoThang($nam)
+    public function thongkeDonHangTheoThang($objNam)
     {
         $res = array();
-
+        $obj = json_decode($objNam);
         for ($i = 1; $i < 13; $i++) {
-            $sql = "SELECT COUNT(*) as x FROM tb_hoadon WHERE MONTH(created_at) = " . $i;
-            $lst = DB::select($sql);
-            $dataThang = [
-                'name' => 'Tháng ' . $i,
-                'Đơn hàng' => ($lst[0]->x == null) ? 0 : $lst[0]->x
-            ];
+            $dataThang = array();
+            $dataThang['name'] = "Tháng " .$i;
+            foreach ($obj as $item) {
+                $j = intval($item);
+                $sql = "SELECT COUNT(*) as x FROM tb_hoadon WHERE MONTH(created_at) = " . $i . " AND YEAR(created_at) = " . $j;
+                $lst = DB::select($sql);
+                $dataThang[$j] = ($lst[0]->x == null) ? 0 : $lst[0]->x;
+            }
             array_push($res, $dataThang);
         }
-
         return response()->json($res);
     }
 
-    public function thongKeDonHangTheoNam($nam)
+    public function thongKeDonHangTheoNam($tunam, $dennam)
     {
         $res = array();
 
-        for ($i = $nam; $i < date("Y"); $i++) {
+        for ($i = $tunam; $i <= $dennam; $i++) {
             $sql = "SELECT COUNT(*) as x FROM tb_hoadon WHERE YEAR(created_at) = " . $i;
             $lst = DB::select($sql);
             $dataNam = [
-                'name' => 'Tháng ' . $i,
+                'name' => 'Năm ' . $i,
                 'Đơn hàng' => ($lst[0]->x == null) ? 0 : $lst[0]->x
             ];
             array_push($res, $dataNam);

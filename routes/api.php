@@ -78,6 +78,6 @@ Route::get('/thongke/coban', 'ThongKeController@ThongKeCoBan');
 Route::get('/thongke/doanhthu/thang/{nam}', 'ThongKeController@thongKeDoanhThuTheoThang');
 Route::get('/thongke/doanhthu/nam/{tunam}/{dennam}', 'ThongKeController@thongKeDoanhAllNam');
 
-Route::get('/thongke/donhang/thang/{nam}', 'ThongKeController@thongkeDonHangTheoThang');
-Route::get('/thongke/donhang/nam/{nam}', 'ThongKeController@thongKeDonHangTheoNam');
+Route::get('/thongke/donhang/thang/{objNam}', 'ThongKeController@thongkeDonHangTheoThang');
+Route::get('/thongke/donhang/nam/{tunam}/{dennam}', 'ThongKeController@thongKeDonHangTheoNam');
 Route::get('/thongke/donhangngay/{ngay}/{thang}/{nam}', 'ThongKeController@getDonHangTheoNgay');
