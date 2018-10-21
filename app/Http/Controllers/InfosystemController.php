@@ -22,7 +22,7 @@ class InfosystemController extends Controller
 
     public function index()
     {
-        return response()->json(['message' => 'Code by cuongpg']);
+        return response()->json(['message' => 'index']);
     }
 
     /**

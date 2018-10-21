@@ -28,7 +28,7 @@ class HoadonController extends Controller
     public function index()
     {
         //
-        return response()->json(['message' => 'Code by cuongpg']);
+        return response()->json(['message' => 'index']);
     }
 
     /**
@@ -64,6 +64,7 @@ class HoadonController extends Controller
                 'id_user' => $user->id,
                 'id_goi' => $request->get('id_goi'),
                 'tinhtrang' => 0,
+                'tongtien' => $request->get('tongtien'),
             ]);
 
             $newCTHoaDon = CTHoaDon::create([
@@ -73,7 +74,7 @@ class HoadonController extends Controller
                 'diadiemtochuc' => $request->get('diadiemtochuc'),
                 'mota' => $request->get('mota')
             ]);
-            // return response()->json(['status' => true, 'data' => $newitem->id_hoadon]);
+            // return response()->json(['status' => true, 'data' =>  $request->get('diadiemtochuc')]);
             return response()->json(['status' => true, 'data' => $newitem, 'cthd' => $newCTHoaDon], 201);
         } catch (Exception $x) {
             return response()->json(['status' => false, 'message' => 'Can\'t create'], 400);

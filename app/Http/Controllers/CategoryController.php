@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return response()->json(['status' => true, 'message' => 'Code by khac huu']);
+        return response()->json(['status' => true, 'message' => 'index']);
     }
 
     public function create()

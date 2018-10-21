@@ -18,7 +18,7 @@ class PhanLoaiDichVuController extends Controller
     }
     public function index()
     {
-        return response()->json(['status' => true, 'message' => 'Code by Cuongpg']);
+        return response()->json(['status' => true, 'message' => 'index']);
     }
 
     public function create()

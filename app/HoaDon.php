@@ -14,5 +14,6 @@ class HoaDon extends Model
         'id_user',
         'id_goi',
         'tinhtrang',
+        'tongtien',
     ];
 }
